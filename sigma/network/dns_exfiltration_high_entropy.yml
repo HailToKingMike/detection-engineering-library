@@ -1,0 +1,28 @@
+title: High-Entropy DNS Subdomain Query
+id: 90bb10c2-93e3-484e-9d02-baeab3ddd379
+status: experimental
+description: Detects potential DNS exfiltration via high-entropy subdomain queries. Cloudflare Gateway logs are primary source.
+references:
+  - https://attack.mitre.org/techniques/T1071/004/
+  - DH-019
+author: Michael Stewart
+date: 2026-03-26
+logsource:
+  product: cloudflare
+  service: gateway_dns
+detection:
+  selection:
+    dns.question.subdomain|re: '[a-zA-Z0-9](25,)'
+  filter_cdn:
+    dns.question.name|contains:
+      - 'cloudfront.net'
+      - 'akamai.net'
+      - 'fastly.net'
+  condition: selection and not filter_cdn
+falsepositives:
+  - CDN domains with long subdomains
+level: medium
+tags:
+  - attack.exfiltration
+  - attack.t1071.004
+  - DH-019

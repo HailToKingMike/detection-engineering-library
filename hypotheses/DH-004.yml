@@ -1,0 +1,32 @@
+hypothesis_id: DH-004
+status: Backlog
+created: '2026-03-26'
+priority: 4
+adversary_profile: Ransomware Groups, APT28
+adversary_behavior: Pass-the-hash lateral movement using NTLM hash to authenticate
+  without plaintext password.
+attack_technique: T1550.002
+attack_tactic: Lateral Movement
+hypothesis: If an attacker uses a stolen NTLM hash to authenticate, then a logon event
+  (4624) with LogonType 3 and NTLM authentication will appear from an unexpected source
+  IP, without a corresponding 4648 credential logon.
+required_telemetry:
+- source: Windows Security Event 4624 (Logon)
+  available: true
+- source: Windows Security Event 4648 (Explicit Credentials)
+  available: true
+- source: CrowdStrike lateral movement telemetry
+  available: true
+expected_signals:
+- Event 4624 LogonType 3, AuthenticationPackageName NTLM from unexpected source
+- Mimikatz sekurlsa::pth command execution
+- impacket psexec or smbexec from Kali to victim
+test_method: Atomic Red Team T1550.002 (Mimikatz PTH)
+test_variants:
+- Mimikatz sekurlsa::pth
+- impacket psexec
+- CrackMapExec
+linked_sigma_rule: sigma/windows/lateral_movement/pass_the_hash_ntlm.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0

@@ -1,0 +1,36 @@
+hypothesis_id: DH-006
+status: Backlog
+created: '2026-03-26'
+priority: 6
+adversary_profile: APT29, advanced actors
+adversary_behavior: Living-off-the-land execution using built-in Windows binaries
+  to execute malicious code without dropping traditional malware.
+attack_technique: T1218, T1059
+attack_tactic: Defense Evasion, Execution
+hypothesis: If an attacker uses LOLBins for execution, then known-abused Windows binaries
+  will appear as parents of unexpected child processes or with suspicious command
+  line arguments observable in Sysmon Event ID 1.
+required_telemetry:
+- source: Sysmon Event ID 1 (ProcessCreate)
+  available: true
+- source: CrowdStrike process telemetry
+  available: true
+expected_signals:
+- certutil.exe -decode or -urlcache
+- mshta.exe executing remote HTA
+- 'regsvr32.exe /s /u /i: (Squiblydoo)'
+- wmic.exe process call create
+- msiexec.exe /quiet /i http://
+test_method: Atomic Red Team T1218.001 through T1218.011
+test_variants:
+- certutil
+- mshta
+- regsvr32 squiblydoo
+- wmic
+- msiexec
+linked_sigma_rule: sigma/windows/defense_evasion/lolbin_execution.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: Highest tuning complexity. Many LOLBins have legitimate admin uses. FP check
+  is critical. Scope rules to specific argument patterns, not binary names alone.

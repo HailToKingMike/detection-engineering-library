@@ -1,0 +1,35 @@
+hypothesis_id: DH-001
+status: Backlog
+created: '2026-03-26'
+priority: 1
+adversary_profile: Ransomware Groups (LockBit, BlackCat), APT29
+adversary_behavior: Credential dumping from LSASS memory to obtain domain credentials
+  for lateral movement and privilege escalation.
+attack_technique: T1003.001
+attack_tactic: Credential Access
+hypothesis: If an attacker attempts credential dumping from LSASS, then a process
+  will access LSASS memory via known tooling or Windows APIs, observable in Sysmon
+  Event ID 10 and process creation telemetry.
+required_telemetry:
+- source: Sysmon Event ID 10 (ProcessAccess)
+  available: true
+- source: Sysmon Event ID 1 (ProcessCreate)
+  available: true
+- source: CrowdStrike process telemetry
+  available: true
+expected_signals:
+- rundll32.exe loading comsvcs.dll with MiniDump argument
+- procdump.exe with -ma flag targeting lsass.exe
+- nanodump or custom .NET accessing lsass process handle
+- PROCESS_VM_READ handle open to lsass.exe
+test_method: Atomic Red Team T1003.001
+test_variants:
+- comsvcs.dll via rundll32
+- procdump.exe -ma
+- nanodump
+linked_sigma_rule: sigma/windows/credential_access/lsass_dump_rundll32.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: CrowdStrike default catches comsvcs variant. Gap is nanodump and reflective
+  .NET tooling. Rule needs Sysmon 1 and Sysmon 10 paths.

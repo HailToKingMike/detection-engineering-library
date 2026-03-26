@@ -1,0 +1,29 @@
+hypothesis_id: DH-018
+status: Backlog
+created: '2026-03-26'
+priority: 18
+adversary_profile: Cloud-targeting actors
+adversary_behavior: AWS IAM privilege escalation through policy attachment, role assumption,
+  or access key abuse.
+attack_technique: T1078.004
+attack_tactic: Privilege Escalation
+hypothesis: If an attacker escalates AWS IAM privileges, then CloudTrail will log
+  unusual IAM API calls including AttachUserPolicy, CreateAccessKey, or AssumeRole
+  from unexpected principals.
+required_telemetry:
+- source: AWS CloudTrail (cloud team ticket in progress)
+  available: false
+- source: AWS Security Hub
+  available: false
+expected_signals:
+- AttachUserPolicy or AttachRolePolicy from non-admin identity
+- CreateAccessKey for another user
+- AssumeRole to high-privilege role from unexpected source
+- PassRole escalation patterns
+test_method: Pacu AWS exploitation framework IAM escalation modules
+linked_sigma_rule: sigma/network/aws_iam_privilege_escalation.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: Blocked on AWS CloudTrail integration (cloud team ticket). Will become testable once
+  cloud platform team completes CloudTrail ingestion.

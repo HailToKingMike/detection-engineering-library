@@ -1,0 +1,28 @@
+hypothesis_id: DH-015
+status: Backlog
+created: '2026-03-26'
+priority: 15
+adversary_profile: APT29
+adversary_behavior: Azure AD token theft and replay to authenticate as a user without
+  their credentials or MFA.
+attack_technique: T1528, T1550.001
+attack_tactic: Credential Access, Lateral Movement
+hypothesis: If an attacker replays a stolen access token, then Entra ID will log a
+  successful authentication from an IP or device that does not match the original
+  token issuance context.
+required_telemetry:
+- source: Entra ID SignInLogs (P1/P2 dependency)
+  available: false
+- source: Azure AD Risk Detection logs
+  available: false
+expected_signals:
+- Token used from different IP than issuance
+- Token used from different device/browser fingerprint
+- Authentication without MFA challenge on MFA-required resource
+test_method: AADInternals token theft and replay simulation
+linked_sigma_rule: sigma/windows/credential_access/azure_token_replay.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: Blocked on Entra ID Event Hub integration. P1/P2 license required for token-level
+  logging.

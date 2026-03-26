@@ -1,0 +1,36 @@
+title: Active Directory Enumeration via LDAP and Net Commands
+id: 0dfecf25-2793-4c97-ad3b-5d8c3de0a16a
+status: experimental
+description: Detects BloodHound-style AD enumeration via net commands and PowerView.
+references:
+  - https://attack.mitre.org/techniques/T1087/
+  - DH-003
+author: Michael Stewart
+date: 2026-03-26
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_net:
+    Image|endswith: '\\net.exe'
+    CommandLine|contains:
+      - 'group /domain'
+      - 'user /domain'
+      - 'localgroup administrators'
+  selection_powerview:
+    Image|endswith: '\\powershell.exe'
+    CommandLine|contains:
+      - 'Get-DomainUser'
+      - 'Get-DomainGroup'
+      - 'Get-NetUser'
+      - 'Find-LocalAdminAccess'
+      - 'Invoke-Kerberoast'
+  condition: 1 of selection_*
+falsepositives:
+  - IT administrators running AD queries for legitimate management
+level: medium
+tags:
+  - attack.discovery
+  - attack.t1087
+  - attack.t1069
+  - DH-003

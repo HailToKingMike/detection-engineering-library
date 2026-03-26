@@ -1,0 +1,33 @@
+title: Shadow Copy Deletion
+id: 9ccbe5e1-13c2-427d-8925-32f9d40ab2c5
+status: experimental
+description: Detects deletion of volume shadow copies. Critical ransomware precursor with near-zero false positive rate.
+references:
+  - https://attack.mitre.org/techniques/T1490/
+  - DH-012
+author: Michael Stewart
+date: 2026-03-26
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_vssadmin:
+    Image|endswith: '\\vssadmin.exe'
+    CommandLine|contains: 'delete shadows'
+  selection_wmic:
+    Image|endswith: '\\wmic.exe'
+    CommandLine|contains: 'shadowcopy delete'
+  selection_powershell:
+    Image|endswith: '\\powershell.exe'
+    CommandLine|contains: 'Win32_ShadowCopy'
+  selection_bcdedit:
+    Image|endswith: '\\bcdedit.exe'
+    CommandLine|contains: 'recoveryenabled no'
+  condition: 1 of selection_*
+falsepositives:
+  - Backup software management (extremely rare)
+level: critical
+tags:
+  - attack.impact
+  - attack.t1490
+  - DH-012

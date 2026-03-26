@@ -1,0 +1,104 @@
+name: Sigma Rule Validation
+
+on:
+  pull_request:
+    paths:
+      - 'sigma/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'sigma/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Syntax + Compilation Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Set up Python
+        uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
+        with:
+          python-version: '3.11'
+
+      - name: Install pySigma and backends
+        run: |
+          pip install \
+            pysigma==0.11.0 \
+            pysigma-backend-elasticsearch==1.1.0 \
+            pysigma-backend-crowdstrike==0.2.0 \
+            pysigma-pipeline-sysmon==1.0.4 \
+            pysigma-pipeline-windows==1.3.2
+
+      - name: Validate Sigma syntax
+        run: |
+          ERRORS=0
+          for rule in $(find sigma/ -name "*.yml" -type f); do
+            python -c "
+          import yaml, sys
+          with open('$rule') as f:
+              data = yaml.safe_load(f)
+          required = ['title','id','status','description','logsource','detection','level','tags']
+          missing = [k for k in required if k not in data]
+          if missing:
+              print(f'FAIL $rule: missing fields {missing}')
+              sys.exit(1)
+          print(f'OK   $rule')
+          " || ERRORS=$((ERRORS+1))
+          done
+          [ $ERRORS -eq 0 ] || exit 1
+
+      - name: Compile to Elastic KQL
+        run: |
+          mkdir -p compiled/elastic
+          for rule in $(find sigma/ -name "*.yml" -type f); do
+            BASENAME=$(basename "$rule" .yml)
+            sigma convert -t elasticsearch -f kibana_ndjson -p sysmon -p windows \
+              "$rule" > "compiled/elastic/${BASENAME}.ndjson" 2>/dev/null || \
+              echo "WARN: $rule could not compile to Elastic"
+          done
+
+      - name: Compile to CrowdStrike
+        run: |
+          mkdir -p compiled/crowdstrike
+          for rule in $(find sigma/windows/ -name "*.yml" -type f); do
+            BASENAME=$(basename "$rule" .yml)
+            sigma convert -t crowdstrike -p sysmon -p windows \
+              "$rule" > "compiled/crowdstrike/${BASENAME}.json" 2>/dev/null || \
+              echo "WARN: $rule could not compile to CrowdStrike"
+          done
+
+      - name: Check hypothesis references
+        run: |
+          for rule in $(find sigma/ -name "*.yml" -type f); do
+            python -c "
+          import yaml
+          with open('$rule') as f:
+              data = yaml.safe_load(f)
+          refs = data.get('references', [])
+          tags = data.get('tags', [])
+          has_dh = any('DH-' in str(x) for x in refs + tags)
+          if not has_dh:
+              print(f'WARN $rule: no hypothesis reference (DH-xxx)')
+          "
+          done
+
+      - name: Coverage diff
+        run: |
+          for rule in $(find sigma/ -name "*.yml"); do
+            python -c "
+          import yaml
+          try:
+              with open('$rule') as f:
+                  d = yaml.safe_load(f)
+              techniques = [t for t in d.get('tags',[]) if 'attack.t' in t.lower()]
+              if techniques: print(f'  $rule: {techniques}')
+          except: pass
+          " 2>/dev/null || true
+          done

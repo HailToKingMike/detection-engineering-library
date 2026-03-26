@@ -1,0 +1,33 @@
+hypothesis_id: DH-013
+status: Backlog
+created: '2026-03-26'
+priority: 13
+adversary_profile: APT29, APT28
+adversary_behavior: MFA fatigue attack sending repeated push notifications to exhaust
+  user into approving malicious authentication.
+attack_technique: T1621
+attack_tactic: Credential Access
+hypothesis: If an attacker performs MFA push bombing, then Duo authentication logs
+  will show a high volume of push notifications to a single user in a short window,
+  followed eventually by an approval from an unexpected location.
+required_telemetry:
+- source: Cisco Duo authentication API
+  available: true
+- source: Entra ID SignInLogs (P1/P2 dependency)
+  available: false
+expected_signals:
+- Multiple Duo push denials from same user in short window
+- Push approval following string of denials (fatigue capitulation)
+- Duo fraud report (user presses report fraud)
+- Authentication from unexpected geo following approval
+test_method: Manual simulation using test account with repeated push triggers
+test_variants:
+- Rapid push sequence
+- Fraud report trigger
+linked_sigma_rule: sigma/windows/credential_access/mfa_fatigue_duo.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: Duo Trust Monitor is already active. This hypothesis formalizes the detection
+  rule for the correlation pattern. Cross-correlate with subsequent successful auth
+  from anomalous location.

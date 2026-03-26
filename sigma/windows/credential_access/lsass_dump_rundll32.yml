@@ -1,0 +1,26 @@
+title: LSASS Memory Dump via Rundll32 comsvcs
+id: fb43b82f-7a11-43d6-95d1-3e18d6f252ee
+status: experimental
+description: Detects LSASS memory dump using rundll32.exe and comsvcs.dll MiniDump technique.
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+  - DH-001
+author: Michael Stewart
+date: 2026-03-26
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith: "\\rundll32.exe"
+    CommandLine|contains|all:
+      - comsvcs
+      - MiniDump
+  condition: selection
+falsepositives:
+  - Legitimate memory diagnostic tools
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+  - DH-001

@@ -1,0 +1,54 @@
+{
+  "profile_id": "ADV-002",
+  "name": "APT29 (Cozy Bear)",
+  "nation_state": "Russia (SVR)",
+  "motivation": "Research theft, credential harvesting, long-term persistence",
+  "higher_ed_targeting": "High. Research institutions and universities targeted for intellectual property and identity harvesting at scale.",
+  "entry_vectors": [
+    "Spearphishing",
+    "Supply chain compromise",
+    "Credential stuffing against student portals"
+  ],
+  "primary_ttps": [
+    {
+      "technique": "T1566",
+      "name": "Phishing",
+      "hypothesis": null
+    },
+    {
+      "technique": "T1003.001",
+      "name": "LSASS Credential Dumping",
+      "hypothesis": "DH-001"
+    },
+    {
+      "technique": "T1071.004",
+      "name": "DNS C2 Beaconing",
+      "hypothesis": "DH-005"
+    },
+    {
+      "technique": "T1218",
+      "name": "LOLBin Execution",
+      "hypothesis": "DH-006"
+    },
+    {
+      "technique": "T1621",
+      "name": "MFA Fatigue",
+      "hypothesis": "DH-013"
+    },
+    {
+      "technique": "T1528",
+      "name": "OAuth Consent Abuse",
+      "hypothesis": "DH-014"
+    },
+    {
+      "technique": "T1550.001",
+      "name": "Token Theft and Replay",
+      "hypothesis": "DH-015"
+    }
+  ],
+  "detection_priority": 2,
+  "intel_sources": [
+    "CISA AA23-347A",
+    "NCSC APT29 advisory"
+  ]
+}

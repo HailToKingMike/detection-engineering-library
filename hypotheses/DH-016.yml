@@ -1,0 +1,28 @@
+hypothesis_id: DH-016
+status: Backlog
+created: '2026-03-26'
+priority: 16
+adversary_profile: All identity-targeting actors
+adversary_behavior: Impossible travel login from geographically impossible locations
+  indicating stolen credentials in use.
+attack_technique: T1078
+attack_tactic: Initial Access
+hypothesis: If stolen credentials are used from a remote location, then authentication
+  telemetry will show two successful logins from the same account at geographically
+  impossible distances within a time window too short for legitimate travel.
+required_telemetry:
+- source: Cisco Duo authentication logs with IP geolocation
+  available: true
+- source: Entra ID SignInLogs (P1/P2 dependency)
+  available: false
+expected_signals:
+- Two successful Duo authentications from same account
+- Geographic distance impossible given time delta between auths
+- Second auth from high-risk country or anonymous proxy/VPN
+test_method: Manual simulation using VPN from test account
+linked_sigma_rule: sigma/windows/credential_access/impossible_travel_duo.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: Duo is the primary source here today. Entra would add M365 context. Build Duo-based
+  rule first.

@@ -1,0 +1,32 @@
+hypothesis_id: DH-007
+status: Backlog
+created: '2026-03-26'
+priority: 7
+adversary_profile: Ransomware Groups
+adversary_behavior: DCSync attack simulating domain controller replication to extract
+  all domain credentials from NTDS.dit.
+attack_technique: T1003.006
+attack_tactic: Credential Access
+hypothesis: If an attacker executes a DCSync attack, then the directory replication
+  service will receive a GetNCChanges request from a non-DC source, observable as
+  Event 4662 with replication privilege GUID.
+required_telemetry:
+- source: Windows Security Event 4662 (Object Operation)
+  available: true
+- source: Windows Security Event 4624 (Logon on DC)
+  available: true
+expected_signals:
+- Event 4662 with ObjectType DS-Replication-Get-Changes-All from non-DC
+- Mimikatz lsadump::dcsync execution
+- impacket secretsdump.py against DC
+test_method: Atomic Red Team T1003.006
+test_variants:
+- Mimikatz dcsync
+- impacket secretsdump
+- Invoke-DCSync
+linked_sigma_rule: sigma/windows/credential_access/dcsync_non_dc_source.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: High confidence signal. Non-DC source performing replication is nearly always
+  malicious. Low FP expected.

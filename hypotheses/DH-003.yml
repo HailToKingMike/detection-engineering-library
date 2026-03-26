@@ -1,0 +1,35 @@
+hypothesis_id: DH-003
+status: Backlog
+created: '2026-03-26'
+priority: 3
+adversary_profile: All adversary profiles
+adversary_behavior: LDAP/AD enumeration via BloodHound or manual queries to map attack
+  paths to domain admin.
+attack_technique: T1087, T1069
+attack_tactic: Discovery
+hypothesis: If an attacker enumerates AD objects, then LDAP queries will be observable
+  as anomalous volume from a non-DC source, and BloodHound-specific query patterns
+  will appear in DC network telemetry.
+required_telemetry:
+- source: Windows Security Event 4662 (Object Access)
+  available: true
+- source: Network telemetry (LDAP port 389/636)
+  available: true
+- source: CrowdStrike network telemetry
+  available: true
+expected_signals:
+- High volume LDAP queries from workstation to DC
+- BloodHound LDAP query patterns (specific attribute requests)
+- net.exe commands for group enumeration
+- PowerView enumeration commands
+test_method: Atomic Red Team T1087.002, BloodHound SharpHound
+test_variants:
+- SharpHound.exe -c All
+- net group /domain
+- PowerView Get-DomainUser
+linked_sigma_rule: sigma/windows/discovery/ad_enumeration_ldap.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: BloodHound detection is volume-based. Threshold tuning required to avoid FP
+  on legitimate IT tooling.

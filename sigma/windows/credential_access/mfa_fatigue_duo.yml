@@ -1,0 +1,26 @@
+title: MFA Push Bombing via Duo
+id: f015fc0b-4311-4baa-a4d5-6e88520fa013
+status: experimental
+description: Detects MFA fatigue attacks via high volume Duo push denials for single user in short window.
+references:
+  - https://attack.mitre.org/techniques/T1621/
+  - DH-013
+author: Michael Stewart
+date: 2026-03-26
+logsource:
+  product: cisco_duo
+  service: authentication
+detection:
+  selection:
+    event.outcome: failure
+    duo.auth.result: deny
+    duo.auth.factor: push
+  timeframe: 5m
+  condition: selection | count(user.name) by user.name > 3
+falsepositives:
+  - User accidentally denying legitimate push notifications
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1621
+  - DH-013

@@ -1,0 +1,53 @@
+{
+  "name": "Enterprise Detection Coverage",
+  "versions": {
+    "attack": "14",
+    "navigator": "4.9"
+  },
+  "domain": "enterprise-attack",
+  "description": "Detection coverage for a large multi-campus educational institution. Built via hypothesis-driven methodology with lab validation. Score: 3=validated both platforms, 2=one platform validated, 1=rule written not yet validated, 0=no coverage.",
+  "filters": {
+    "platforms": ["Windows", "Linux"]
+  },
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "showID": true,
+    "showName": true
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {"techniqueID": "T1003.001", "score": 1, "comment": "DH-001 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1558.003", "score": 1, "comment": "DH-002 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1087",     "score": 1, "comment": "DH-003 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1069",     "score": 1, "comment": "DH-003 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1550.002", "score": 1, "comment": "DH-004 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1071.004", "score": 1, "comment": "DH-005 + DH-019 - Rules written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1218",     "score": 1, "comment": "DH-006 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1059",     "score": 1, "comment": "DH-006 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1003.006", "score": 1, "comment": "DH-007 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1053.005", "score": 1, "comment": "DH-008 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1547.001", "score": 1, "comment": "DH-009 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1110.003", "score": 1, "comment": "DH-010 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1490",     "score": 1, "comment": "DH-012 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1621",     "score": 1, "comment": "DH-013 - Rule written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1528",     "score": 1, "comment": "DH-014 + DH-015 - Rules written, Entra integration pending", "enabled": true},
+    {"techniqueID": "T1078",     "score": 1, "comment": "DH-010 + DH-016 - Rules written, lab validation pending", "enabled": true},
+    {"techniqueID": "T1098.001", "score": 1, "comment": "DH-017 - Rule written, cloud integration pending", "enabled": true},
+    {"techniqueID": "T1078.004", "score": 1, "comment": "DH-018 - Rule written, CloudTrail integration pending", "enabled": true}
+  ],
+  "gradient": {
+    "colors": ["#ff6666", "#ffff66", "#66ff66"],
+    "minValue": 0,
+    "maxValue": 3
+  },
+  "legendItems": [
+    {"label": "Score 3: Validated, both platforms", "color": "#66ff66"},
+    {"label": "Score 2: Validated, one platform", "color": "#ffff66"},
+    {"label": "Score 1: Rule written, pending lab", "color": "#ff9900"},
+    {"label": "Score 0: No coverage", "color": "#ff6666"}
+  ],
+  "metadata": [],
+  "showTacticRowBackground": true,
+  "tacticRowBackground": "#dddddd"
+}

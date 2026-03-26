@@ -1,0 +1,30 @@
+hypothesis_id: DH-011
+status: Backlog
+created: '2026-03-26'
+priority: 11
+adversary_profile: Ransomware Groups
+adversary_behavior: Large file staging in local directories before exfiltration, collecting
+  data for ransomware double-extortion.
+attack_technique: T1074, T1005
+attack_tactic: Collection
+hypothesis: If an attacker stages files for exfiltration, then Sysmon file creation
+  events will show a high volume of file copies to a staging directory, particularly
+  from network shares to local temp paths.
+required_telemetry:
+- source: Sysmon Event ID 11 (FileCreate)
+  available: true
+- source: CrowdStrike file telemetry
+  available: true
+expected_signals:
+- High volume FileCreate events to single directory in short window
+- robocopy or xcopy to temp or user-controlled path
+- Staging directory size growing rapidly
+test_method: Atomic Red Team T1074.001, T1005
+test_variants:
+- robocopy staging
+- PowerShell Copy-Item loop
+- 7zip compression before exfil
+linked_sigma_rule: sigma/windows/collection/large_file_staging.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0

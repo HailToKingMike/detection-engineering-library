@@ -1,0 +1,102 @@
+{
+  "generated": "2026-03-26",
+  "scope": "Enterprise endpoint telemetry. Multi-source SIEM ingestion across EDR, identity, DNS, and cloud planes.",
+  "siem_version": "Elastic Cloud 9.2.x",
+  "edr_version": "CrowdStrike Falcon",
+  "techniques": {
+    "T1003.001": {
+      "name": "OS Credential Dumping: LSASS Memory",
+      "hypothesis": "DH-001",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog",
+      "notes": "Rules written, lab validation pending"
+    },
+    "T1558.003": {
+      "name": "Steal or Forge Kerberos Tickets: Kerberoasting",
+      "hypothesis": "DH-002",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog"
+    },
+    "T1087": {
+      "name": "Account Discovery",
+      "hypothesis": "DH-003",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog"
+    },
+    "T1550.002": {
+      "name": "Use Alternate Authentication Material: Pass the Hash",
+      "hypothesis": "DH-004",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog"
+    },
+    "T1071.004": {
+      "name": "Application Layer Protocol: DNS",
+      "hypothesis": "DH-005, DH-019",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog",
+      "notes": "DH-019 requires Cloudflare gateway DNS logs (operational). DH-005 requires lab DNS debug logging."
+    },
+    "T1218": {
+      "name": "System Binary Proxy Execution",
+      "hypothesis": "DH-006",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog"
+    },
+    "T1003.006": {
+      "name": "OS Credential Dumping: DCSync",
+      "hypothesis": "DH-007",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog"
+    },
+    "T1053.005": {
+      "name": "Scheduled Task/Job: Scheduled Task",
+      "hypothesis": "DH-008",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog"
+    },
+    "T1547.001": {
+      "name": "Boot or Logon Autostart Execution: Registry Run Keys",
+      "hypothesis": "DH-009",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog"
+    },
+    "T1110.003": {
+      "name": "Brute Force: Password Spraying",
+      "hypothesis": "DH-010",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog"
+    },
+    "T1490": {
+      "name": "Inhibit System Recovery",
+      "hypothesis": "DH-012",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog"
+    },
+    "T1621": {
+      "name": "Multi-Factor Authentication Request Generation",
+      "hypothesis": "DH-013",
+      "elastic_score": 0,
+      "crowdstrike_score": 0,
+      "status": "Backlog"
+    }
+  },
+  "summary": {
+    "total_techniques": 12,
+    "validated_elastic": 0,
+    "validated_crowdstrike": 0,
+    "backlog": 12,
+    "score_3_rules": 0,
+    "lab_status": "Detection lab build in progress. AWS isolated VPC architecture."
+  }
+}

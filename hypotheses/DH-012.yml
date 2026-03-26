@@ -1,0 +1,33 @@
+hypothesis_id: DH-012
+status: Backlog
+created: '2026-03-26'
+priority: 12
+adversary_profile: Ransomware Groups
+adversary_behavior: Shadow copy deletion to prevent recovery before ransomware encryption.
+attack_technique: T1490
+attack_tactic: Impact
+hypothesis: If an attacker deletes shadow copies, then vssadmin.exe or wmic.exe will
+  be executed with delete shadowcopy arguments, observable in process creation telemetry
+  and representing near-certain ransomware precursor activity.
+required_telemetry:
+- source: Sysmon Event ID 1 (ProcessCreate)
+  available: true
+- source: CrowdStrike process telemetry
+  available: true
+expected_signals:
+- vssadmin.exe delete shadows /all
+- wmic shadowcopy delete
+- bcdedit /set recoveryenabled no
+- PowerShell Get-WmiObject Win32_ShadowCopy | Remove-WmiObject
+test_method: Atomic Red Team T1490
+test_variants:
+- vssadmin
+- wmic
+- bcdedit
+- PowerShell WMI
+linked_sigma_rule: sigma/windows/impact/shadow_copy_deletion.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: High confidence indicator. Shadow copy deletion has essentially no legitimate
+  use case. Low FP expected. High severity alert.

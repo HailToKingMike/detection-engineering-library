@@ -1,0 +1,31 @@
+hypothesis_id: DH-008
+status: Backlog
+created: '2026-03-26'
+priority: 8
+adversary_profile: Ransomware Groups, Opportunistic Actors
+adversary_behavior: Scheduled task creation for persistence, allowing attacker to
+  survive reboots and maintain access.
+attack_technique: T1053.005
+attack_tactic: Persistence
+hypothesis: If an attacker creates a scheduled task for persistence, then Event 4698
+  will appear with a suspicious task name or action, particularly when the creating
+  process is not a standard admin tool.
+required_telemetry:
+- source: Windows Security Event 4698 (Scheduled Task Created)
+  available: true
+- source: Sysmon Event ID 1 (schtasks.exe or taskeng.exe)
+  available: true
+expected_signals:
+- Event 4698 with non-standard task name
+- schtasks.exe /create with encoded command or HTTP path
+- Task action pointing to temp directory or user-writable path
+- Task created by non-admin process parent
+test_method: Atomic Red Team T1053.005
+test_variants:
+- schtasks.exe /create
+- COM object task creation
+- Register-ScheduledTask PowerShell
+linked_sigma_rule: sigma/windows/persistence/scheduled_task_creation_suspicious.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0

@@ -1,0 +1,24 @@
+{
+  "profile_id": "ADV-004",
+  "name": "Opportunistic Actors",
+  "motivation": "Data theft, cryptomining, student portal credential resale",
+  "higher_ed_targeting": "Very High. Community colleges are soft targets with public-facing portals.",
+  "primary_ttps": [
+    {
+      "technique": "T1190",
+      "name": "Exploit Public-Facing Application",
+      "hypothesis": null
+    },
+    {
+      "technique": "T1110.003",
+      "name": "Password Spraying",
+      "hypothesis": "DH-010"
+    },
+    {
+      "technique": "T1053.005",
+      "name": "Scheduled Task Persistence",
+      "hypothesis": "DH-008"
+    }
+  ],
+  "detection_priority": 4
+}

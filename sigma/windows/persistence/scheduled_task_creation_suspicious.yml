@@ -1,0 +1,33 @@
+title: Suspicious Scheduled Task Creation
+id: 676b3bd2-5e25-4f92-929f-63aeef197c57
+status: experimental
+description: Detects suspicious scheduled task creation with execution from temp paths, encoded commands, or unusual parent processes.
+references:
+  - https://attack.mitre.org/techniques/T1053/005/
+  - DH-008
+author: Michael Stewart
+date: 2026-03-26
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_schtasks:
+    Image|endswith: '\\schtasks.exe'
+    CommandLine|contains: '/create'
+  selection_suspicious:
+    CommandLine|contains:
+      - 'powershell'
+      - 'cmd /c'
+      - 'wscript'
+      - 'cscript'
+      - 'http://'
+      - 'https://'
+  condition: selection_schtasks and selection_suspicious
+falsepositives:
+  - Legitimate scheduled tasks created via admin scripts
+  - Software installers creating update tasks
+level: medium
+tags:
+  - attack.persistence
+  - attack.t1053.005
+  - DH-008

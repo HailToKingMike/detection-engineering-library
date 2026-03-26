@@ -1,0 +1,30 @@
+hypothesis_id: DH-009
+status: Backlog
+created: '2026-03-26'
+priority: 9
+adversary_profile: Multiple adversary profiles
+adversary_behavior: Registry run key modification for persistence to execute code
+  at user logon or system startup.
+attack_technique: T1547.001
+attack_tactic: Persistence
+hypothesis: If an attacker modifies registry run keys, then Sysmon Event ID 13 will
+  capture the registry write to HKLM or HKCU Run keys with an unusual value pointing
+  to a suspicious binary path.
+required_telemetry:
+- source: Sysmon Event ID 13 (RegistryEvent Value Set)
+  available: true
+- source: CrowdStrike registry telemetry
+  available: true
+expected_signals:
+- Sysmon 13 on HKLM/HKCU Run or RunOnce keys
+- Value pointing to temp, appdata, or user-writable path
+- Value containing encoded command or unusual executable
+test_method: Atomic Red Team T1547.001
+test_variants:
+- reg.exe add
+- PowerShell Set-ItemProperty
+- direct registry API
+linked_sigma_rule: sigma/windows/persistence/registry_run_key_persistence.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0

@@ -1,0 +1,64 @@
+{
+  "profile_id": "ADV-001",
+  "name": "Ransomware Groups",
+  "examples": [
+    "LockBit",
+    "BlackCat/ALPHV",
+    "Cl0p"
+  ],
+  "motivation": "Financial extortion via double-extortion ransomware",
+  "higher_ed_targeting": "High. Community colleges are high-value targets due to limited security staff, valuable PII (student records, financial aid data), and low tolerance for downtime.",
+  "entry_vectors": [
+    "RDP brute force",
+    "VPN credential stuffing",
+    "Phishing",
+    "Exposed public apps"
+  ],
+  "primary_ttps": [
+    {
+      "technique": "T1078",
+      "name": "Valid Accounts",
+      "hypothesis": "DH-010"
+    },
+    {
+      "technique": "T1003.001",
+      "name": "LSASS Credential Dumping",
+      "hypothesis": "DH-001"
+    },
+    {
+      "technique": "T1558.003",
+      "name": "Kerberoasting",
+      "hypothesis": "DH-002"
+    },
+    {
+      "technique": "T1021.002",
+      "name": "SMB Lateral Movement",
+      "hypothesis": "DH-004"
+    },
+    {
+      "technique": "T1003.006",
+      "name": "DCSync",
+      "hypothesis": "DH-007"
+    },
+    {
+      "technique": "T1074",
+      "name": "Data Staged",
+      "hypothesis": "DH-011"
+    },
+    {
+      "technique": "T1490",
+      "name": "Shadow Copy Deletion",
+      "hypothesis": "DH-012"
+    }
+  ],
+  "kill_chain_sequence": [
+    "Initial access via valid credentials or phishing",
+    "Privilege escalation via Kerberoasting or LSASS dump",
+    "Lateral movement to domain controller",
+    "DCSync to extract all domain credentials",
+    "Data staging for double extortion",
+    "Shadow copy deletion",
+    "Ransomware deployment"
+  ],
+  "detection_priority": 1
+}

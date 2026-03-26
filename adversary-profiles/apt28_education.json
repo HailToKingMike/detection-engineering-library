@@ -1,0 +1,25 @@
+{
+  "profile_id": "ADV-003",
+  "name": "APT28 (Fancy Bear)",
+  "nation_state": "Russia (GRU)",
+  "motivation": "Intelligence collection, mailbox access",
+  "higher_ed_targeting": "Medium-High. Academic institutions targeted for policy research and identity data.",
+  "primary_ttps": [
+    {
+      "technique": "T1110",
+      "name": "Credential Stuffing",
+      "hypothesis": "DH-010"
+    },
+    {
+      "technique": "T1550.002",
+      "name": "Pass-the-Hash",
+      "hypothesis": "DH-004"
+    },
+    {
+      "technique": "T1078",
+      "name": "Impossible Travel",
+      "hypothesis": "DH-016"
+    }
+  ],
+  "detection_priority": 3
+}

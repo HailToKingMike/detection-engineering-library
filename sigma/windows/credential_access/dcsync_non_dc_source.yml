@@ -1,0 +1,30 @@
+title: DCSync Attack from Non-Domain Controller
+id: 58f75f45-932e-42c0-9000-af7233b8c65e
+status: experimental
+description: Detects DCSync attack via directory replication requests from non-DC source. Near-certain indicator of credential dumping.
+references:
+  - https://attack.mitre.org/techniques/T1003/006/
+  - DH-007
+author: Michael Stewart
+date: 2026-03-26
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4662
+    Properties|contains:
+      - '1131f6aa-9c07-11d1-f79f-00c04fc2dcd2'
+      - '1131f6ad-9c07-11d1-f79f-00c04fc2dcd2'
+      - '89e95b76-444d-4c62-991a-0facbeda640c'
+  filter_dc:
+    SubjectDomainName: 'Window Manager'
+  condition: selection and not filter_dc
+falsepositives:
+  - Domain controllers performing legitimate replication
+  - Azure AD Connect sync account
+level: critical
+tags:
+  - attack.credential_access
+  - attack.t1003.006
+  - DH-007

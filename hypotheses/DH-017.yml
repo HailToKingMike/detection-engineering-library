@@ -1,0 +1,28 @@
+hypothesis_id: DH-017
+status: Backlog
+created: '2026-03-26'
+priority: 17
+adversary_profile: Cloud-targeting actors
+adversary_behavior: Service principal credential abuse using compromised app credentials
+  to authenticate to cloud APIs.
+attack_technique: T1098.001
+attack_tactic: Persistence
+hypothesis: If a service principal is abused, then Entra ID will log API authentications
+  from unexpected IPs or at unusual times inconsistent with the application's baseline
+  behavior.
+required_telemetry:
+- source: Entra ID ServicePrincipalSignInLogs (P1/P2 dependency)
+  available: false
+- source: Azure AD AuditLogs
+  available: false
+expected_signals:
+- Service principal auth from unexpected IP
+- Service principal adding credentials (new cert or secret)
+- Service principal assigned new high-privilege role
+test_method: AADInternals service principal abuse simulation
+linked_sigma_rule: sigma/windows/persistence/service_principal_credential_abuse.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: Blocked on Entra ID Event Hub. The 568,694 users in Entra Entity Analytics
+  are currently limited to basic signals.

@@ -1,0 +1,33 @@
+hypothesis_id: DH-010
+status: Backlog
+created: '2026-03-26'
+priority: 10
+adversary_profile: APT28, Opportunistic Actors
+adversary_behavior: Credential stuffing against VPN or student portals using breached
+  credential lists to gain initial access.
+attack_technique: T1078, T1110
+attack_tactic: Initial Access
+hypothesis: If an attacker performs credential stuffing, then authentication telemetry
+  will show a high volume of failed logons across many accounts from a single IP or
+  small IP range in a compressed time window.
+required_telemetry:
+- source: Cisco Duo authentication logs
+  available: true
+- source: Entra ID SignInLogs (blocked on P1/P2 license)
+  available: false
+- source: Windows Security Event 4625 (Failed Logon)
+  available: true
+expected_signals:
+- Many failed Duo authentications from single IP
+- Failed logons across multiple distinct accounts
+- Authentication spray pattern (one attempt per account, not brute force)
+test_method: Atomic Red Team T1110.003 (password spraying)
+test_variants:
+- Spray against Duo-protected app
+- Windows domain password spray
+linked_sigma_rule: sigma/windows/credential_access/password_spray_multiple_accounts.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: Duo telemetry is primary source — already operational. Entra SignInLogs dependency
+  on P1/P2 license resolution with cloud identity team.

@@ -1,0 +1,28 @@
+hypothesis_id: DH-014
+status: Backlog
+created: '2026-03-26'
+priority: 14
+adversary_profile: APT29, Cloud-targeting actors
+adversary_behavior: OAuth consent grant abuse tricking users into granting malicious
+  third-party app access to M365 data.
+attack_technique: T1528
+attack_tactic: Credential Access
+hypothesis: If an attacker abuses OAuth consent, then Entra ID logs will show a new
+  application consent grant from a user account, particularly for applications with
+  Mail.Read or Files.ReadWrite permissions.
+required_telemetry:
+- source: Entra ID AuditLogs (consent events)
+  available: false
+- source: Microsoft Graph activity logs
+  available: false
+expected_signals:
+- New OAuth app consent grant from non-admin user
+- App requesting Mail.Read, Files.ReadWrite, or Contacts.Read
+- App not in approved tenant application list
+test_method: Manual OAuth consent grant simulation with test app registration
+linked_sigma_rule: sigma/windows/credential_access/oauth_consent_grant.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: Blocked on Entra ID Event Hub integration (P1/P2 license). Revisit after Robert
+  Mooers resolves license blocker.

@@ -1,0 +1,34 @@
+hypothesis_id: DH-005
+status: Backlog
+created: '2026-03-26'
+priority: 5
+adversary_profile: APT29, APT28
+adversary_behavior: DNS-based C2 beaconing using periodic DNS queries to attacker-controlled
+  domains for command and control.
+attack_technique: T1071.004
+attack_tactic: Command and Control
+hypothesis: If an attacker uses DNS for C2, then periodic high-frequency DNS queries
+  to a single domain or subdomain enumeration pattern will appear in DNS telemetry,
+  distinguishable from normal browsing by query frequency and subdomain entropy.
+required_telemetry:
+- source: DNS debug logs from lab-dc-01
+  available: true
+- source: Sysmon Event ID 22 (DNS Query)
+  available: true
+- source: Cloudflare Gateway DNS logs (production gap until integration complete)
+  available: false
+expected_signals:
+- High subdomain entropy queries (DNS tunneling)
+- Regular interval DNS queries to same domain (beaconing)
+- TXT or NULL record queries (data exfil via DNS)
+test_method: Atomic Red Team T1071.004, dnscat2 tunnel
+test_variants:
+- dnscat2
+- iodine DNS tunnel
+- Cobalt Strike DNS beacon
+linked_sigma_rule: sigma/network/dns_c2_beaconing.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: Score 0 until Cloudflare integration complete. Lab DNS logging via lab-dc-01
+  debug log covers internal DNS. Production gap remains for perimeter DNS.

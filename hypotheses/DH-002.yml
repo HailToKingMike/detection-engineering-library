@@ -1,0 +1,34 @@
+hypothesis_id: DH-002
+status: Backlog
+created: '2026-03-26'
+priority: 2
+adversary_profile: Ransomware Groups
+adversary_behavior: Kerberoasting to request TGS tickets for service accounts and
+  crack them offline to obtain plaintext credentials.
+attack_technique: T1558.003
+attack_tactic: Credential Access
+hypothesis: If an attacker requests TGS tickets for service accounts with SPNs, then
+  Windows will log Event 4769 with encryption type 0x17 (RC4), observable as anomalous
+  Kerberos ticket requests.
+required_telemetry:
+- source: Windows Security Event 4769 (Kerberos Service Ticket Request)
+  available: true
+- source: Active Directory domain controller logs
+  available: true
+expected_signals:
+- Event 4769 with TicketEncryptionType 0x17 (RC4-HMAC)
+- Multiple TGS requests in short window from single source
+- Requests for SPNs associated with service accounts
+test_method: Atomic Red Team T1558.003 (Rubeus kerberoast)
+test_variants:
+- Rubeus kerberoast
+- Invoke-Kerberoast
+- Impacket GetUserSPNs
+lab_requirement: Service account with SPN required in corp.lab domain. Use weak password
+  for realistic simulation.
+linked_sigma_rule: sigma/windows/credential_access/kerberoasting_rc4_ticket.yml
+coverage_result:
+  elastic: 0
+  crowdstrike: 0
+notes: Requires service account with SPN in lab domain. Create lab-svc-sql with setspn
+  before testing.

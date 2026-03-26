@@ -1,0 +1,42 @@
+title: LOLBin Execution with Suspicious Arguments
+id: 11bfae34-41c4-4e83-93d3-6eef484bb699
+status: experimental
+description: Detects abuse of Windows built-in binaries with suspicious arguments. Covers certutil, mshta, regsvr32, wmic, msiexec abuse patterns.
+references:
+  - https://attack.mitre.org/techniques/T1218/
+  - DH-006
+author: Michael Stewart
+date: 2026-03-26
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_certutil:
+    Image|endswith: '\\certutil.exe'
+    CommandLine|contains:
+      - '-decode'
+      - '-urlcache'
+  selection_mshta:
+    Image|endswith: '\\mshta.exe'
+    CommandLine|contains:
+      - 'http://'
+      - 'https://'
+      - 'javascript:'
+  selection_regsvr32:
+    Image|endswith: '\\regsvr32.exe'
+    CommandLine|contains:
+      - '/s'
+  selection_wmic:
+    Image|endswith: '\\wmic.exe'
+    CommandLine|contains: 'process call create'
+  condition: 1 of selection_*
+falsepositives:
+  - certutil for legitimate certificate operations
+  - Tune each selection block per observed admin activity
+level: medium
+tags:
+  - attack.defense_evasion
+  - attack.execution
+  - attack.t1218
+  - attack.t1059
+  - DH-006
