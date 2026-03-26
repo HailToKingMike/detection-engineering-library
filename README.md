@@ -216,6 +216,6 @@ Coverage scores reflect real lab results, not theoretical capability.
 
 ## Author
 
-**Michael Stewart** — Security Administrator, Detection Engineering
+**Michael Stewart** — Security Engineer, Detection Engineering
 
 [LinkedIn](https://linkedin.com/in/mfstewart) | [Portfolio](https://mfstewart.com) | [GitHub](https://github.com/HailToKingMike)
