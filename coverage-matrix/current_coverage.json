@@ -1,16 +1,17 @@
 {
-  "generated": "2026-03-26",
+  "generated": "2026-03-28",
   "scope": "Enterprise endpoint telemetry. Multi-source SIEM ingestion across EDR, identity, DNS, and cloud planes.",
-  "siem_version": "Elastic Cloud 9.2.x",
+  "siem_version": "Elastic Cloud 9.3.2",
   "edr_version": "CrowdStrike Falcon",
+  "platform_architecture": "Two-repo model: detection-engineering-library (public, rules and methodology) + detection-platform (private, AlertTriageService and lab configs)",
   "techniques": {
     "T1003.001": {
       "name": "OS Credential Dumping: LSASS Memory",
       "hypothesis": "DH-001",
-      "elastic_score": 2,
+      "elastic_score": 1,
       "crowdstrike_score": 0,
       "status": "Backlog",
-      "notes": "Rules written, lab validation pending",
+      "notes": "Rules written, designated as POC for first ART validation loop. Two Sigma rules covering comsvcs.dll and Sysmon ProcessAccess paths.",
       "rules": [
         "LSASS Memory Dump via Rundll32 comsvcs",
         "Suspicious LSASS Process Access via Sysmon"
@@ -23,6 +24,7 @@
       "elastic_score": 1,
       "crowdstrike_score": 0,
       "status": "Backlog",
+      "notes": "Rule written. Lab requires service account with SPN for realistic test.",
       "rules": [
         "Kerberoasting RC4 Ticket Request"
       ],
@@ -56,7 +58,7 @@
       "elastic_score": 1,
       "crowdstrike_score": 0,
       "status": "Backlog",
-      "notes": "DH-019 requires Cloudflare gateway DNS logs (operational). DH-005 requires lab DNS debug logging.",
+      "notes": "DH-019 uses Cloudflare Gateway DNS logs (operational, 148.6M docs). DH-005 requires lab DNS debug logging.",
       "rules": [
         "High-Entropy DNS Subdomain Query"
       ],
@@ -68,6 +70,7 @@
       "elastic_score": 1,
       "crowdstrike_score": 0,
       "status": "Backlog",
+      "notes": "Highest tuning complexity. FP check critical before production promotion.",
       "rules": [
         "LOLBin Execution with Suspicious Arguments"
       ],
@@ -79,6 +82,7 @@
       "elastic_score": 1,
       "crowdstrike_score": 0,
       "status": "Backlog",
+      "notes": "High confidence signal. Non-DC source performing replication is near-certain malicious.",
       "rules": [
         "DCSync Attack from Non-Domain Controller"
       ],
@@ -112,6 +116,7 @@
       "elastic_score": 1,
       "crowdstrike_score": 0,
       "status": "Backlog",
+      "notes": "Duo telemetry is primary source (operational). Entra SignInLogs blocked on P1/P2 license.",
       "rules": [
         "Password Spray Attack Multiple Accounts"
       ],
@@ -123,6 +128,7 @@
       "elastic_score": 1,
       "crowdstrike_score": 0,
       "status": "Backlog",
+      "notes": "Near-zero FP rate. Shadow copy deletion has essentially no legitimate use case.",
       "rules": [
         "Shadow Copy Deletion"
       ],
@@ -134,6 +140,7 @@
       "elastic_score": 1,
       "crowdstrike_score": 0,
       "status": "Backlog",
+      "notes": "Duo Trust Monitor already active. This hypothesis formalizes the detection rule for correlation.",
       "rules": [
         "MFA Push Bombing via Duo"
       ],
@@ -146,10 +153,11 @@
     "validated_crowdstrike": 0,
     "backlog": 12,
     "score_3_rules": 0,
-    "lab_status": "Detection lab build in progress. AWS isolated VPC architecture.",
-    "score_2_rules": 1,
-    "score_1_rules": 11,
+    "score_2_rules": 0,
+    "score_1_rules": 12,
     "score_0_no_coverage": 0,
-    "elastic_coverage_pct": 0.0
+    "elastic_coverage_pct": 0.0,
+    "lab_status": "Detection lab architecture finalized. AWS isolated VPC with 4 VMs (DC, 2x Win11, Kali), dedicated dev Elastic Cloud 9.3.2 cluster, development CrowdStrike CID. ART validation loops begin upon lab VM delivery.",
+    "next_milestone": "DH-001 T1003.001 LSASS credential dump: first complete ART validation loop (POC for entire pipeline)"
   }
 }
