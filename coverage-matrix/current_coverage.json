@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-28",
+  "generated": "2026-03-29",
   "scope": "Enterprise endpoint telemetry. Multi-source SIEM ingestion across EDR, identity, DNS, and cloud planes.",
   "siem_version": "Elastic Cloud 9.3.2",
   "edr_version": "CrowdStrike Falcon",
@@ -8,13 +8,13 @@
     "T1003.001": {
       "name": "OS Credential Dumping: LSASS Memory",
       "hypothesis": "DH-001",
-      "elastic_score": 1,
+      "elastic_score": 2,
       "crowdstrike_score": 0,
       "status": "Backlog",
       "notes": "Rules written, designated as POC for first ART validation loop. Two Sigma rules covering comsvcs.dll and Sysmon ProcessAccess paths.",
       "rules": [
-        "LSASS Memory Dump via Rundll32 comsvcs",
-        "Suspicious LSASS Process Access via Sysmon"
+        "Suspicious LSASS Process Access via Sysmon",
+        "LSASS Memory Dump via Rundll32 comsvcs"
       ],
       "rule_count": 2
     },
@@ -153,8 +153,8 @@
     "validated_crowdstrike": 0,
     "backlog": 12,
     "score_3_rules": 0,
-    "score_2_rules": 0,
-    "score_1_rules": 12,
+    "score_2_rules": 1,
+    "score_1_rules": 11,
     "score_0_no_coverage": 0,
     "elastic_coverage_pct": 0.0,
     "lab_status": "Detection lab architecture finalized. AWS isolated VPC with 4 VMs (DC, 2x Win11, Kali), dedicated dev Elastic Cloud 9.3.2 cluster, development CrowdStrike CID. ART validation loops begin upon lab VM delivery.",
