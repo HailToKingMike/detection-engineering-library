@@ -11,7 +11,7 @@ hypothesis: If an attacker exfiltrates via DNS, then Cloudflare Gateway logs wil
   show high-entropy subdomain queries or unusually large TXT record responses to a
   single domain not on the allow list.
 required_telemetry:
-- source: Cloudflare Gateway DNS logs (S3+SQS integration — operational)
+- source: Cloudflare Gateway DNS logs (S3+SQS integration, operational)
   available: true
 - source: Sysmon Event ID 22 (DNS Query)
   available: true
@@ -29,6 +29,6 @@ linked_sigma_rule: sigma/network/dns_exfiltration_high_entropy.yml
 coverage_result:
   elastic: 0
   crowdstrike: 0
-notes: Cloudflare integration is operational (148.6M docs, 77% of total volume). This
-  is a high-value rule given Cloudflare is the primary DNS inspection point. Score
-  should move quickly once lab DNS logging is configured.
+notes: Cloudflare Gateway integration is operational and represents the dominant share
+  of SIEM ingestion volume. This is a high-value rule given Cloudflare is the primary
+  DNS inspection point. Score should move quickly once lab DNS logging is configured.

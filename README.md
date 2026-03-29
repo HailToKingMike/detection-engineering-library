@@ -40,8 +40,8 @@ detection-engineering-library (this repo, public)
   ART loop methodology templates.
 
 detection-platform (private, internal)
-  AlertTriageService source code, GenAI triage prompts with
-  environment-specific context, lab infrastructure configs,
+  AlertTriageService source code, Elastic knowledge Base entries with
+  organizational context, lab infrastructure configs,
   .env files, production promotion scripts, internal deployment docs.
 ```
 

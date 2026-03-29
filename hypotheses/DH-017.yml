@@ -24,5 +24,5 @@ linked_sigma_rule: sigma/windows/persistence/service_principal_credential_abuse.
 coverage_result:
   elastic: 0
   crowdstrike: 0
-notes: Blocked on Entra ID Event Hub. The 568,694 users in Entra Entity Analytics
-  are currently limited to basic signals.
+notes: Blocked on Entra ID Event Hub. The user population in Entra Entity Analytics
+  is currently limited to basic signals.

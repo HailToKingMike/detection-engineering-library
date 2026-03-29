@@ -58,7 +58,7 @@
       "elastic_score": 1,
       "crowdstrike_score": 0,
       "status": "Backlog",
-      "notes": "DH-019 uses Cloudflare Gateway DNS logs (operational, 148.6M docs). DH-005 requires lab DNS debug logging.",
+      "notes": "DH-019 uses Cloudflare Gateway DNS logs (operational, dominant ingestion source). DH-005 requires lab DNS debug logging.",
       "rules": [
         "High-Entropy DNS Subdomain Query"
       ],

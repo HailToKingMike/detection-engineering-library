@@ -24,5 +24,5 @@ linked_sigma_rule: sigma/windows/credential_access/oauth_consent_grant.yml
 coverage_result:
   elastic: 0
   crowdstrike: 0
-notes: Blocked on Entra ID Event Hub integration (P1/P2 license). Revisit after Robert
-  Mooers resolves license blocker.
+notes: Blocked on Entra ID Event Hub integration (P1/P2 license). Revisit after cloud
+  identity team resolves license blocker.
