@@ -4,6 +4,10 @@ on:
   pull_request:
     paths:
       - 'sigma/**'
+      - 'hypotheses/**'
+      - 'adversary-profiles/**'
+      - 'detection-families/**'
+      - 'coverage-matrix/**'
   push:
     branches:
       - main
@@ -16,11 +20,13 @@ permissions:
 
 jobs:
   validate:
-    name: Syntax + Compilation Validation
+    name: Syntax + Compilation + DLP Validation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0  # needed for git diff in DLP gate
 
       - name: Set up Python
         uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
@@ -102,3 +108,6 @@ jobs:
           except: pass
           " 2>/dev/null || true
           done
+
+      - name: DLP Gate - Block sensitive data leaks
+        run: python scripts/dlp_gate.py --changed-only --fix-suggestions
