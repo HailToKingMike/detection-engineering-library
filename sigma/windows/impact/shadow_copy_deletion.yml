@@ -5,7 +5,7 @@ description: Detects deletion of volume shadow copies. Critical ransomware precu
 references:
   - https://attack.mitre.org/techniques/T1490/
   - DH-012
-author: Michael Stewart
+author: Imperium Defense
 date: 2026-03-26
 logsource:
   category: process_creation

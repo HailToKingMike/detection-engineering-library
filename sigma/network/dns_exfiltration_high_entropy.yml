@@ -5,7 +5,7 @@ description: Detects potential DNS exfiltration via high-entropy subdomain queri
 references:
   - https://attack.mitre.org/techniques/T1071/004/
   - DH-019
-author: Michael Stewart
+author: Imperium Defense
 date: 2026-03-26
 logsource:
   product: cloudflare

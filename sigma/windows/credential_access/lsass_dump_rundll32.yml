@@ -5,7 +5,7 @@ description: Detects LSASS memory dump using rundll32.exe and comsvcs.dll MiniDu
 references:
   - https://attack.mitre.org/techniques/T1003/001/
   - DH-001
-author: Michael Stewart
+author: Imperium Defense
 date: 2026-03-26
 logsource:
   category: process_creation

@@ -64,17 +64,17 @@ DLP_PATTERNS = [
     },
     {
         "name": "Deployment ID",
-        "pattern": r"mcccd-[a-f0-9]{6}",
+        "pattern": r"[a-z]{3,8}-[a-f0-9]{6}",
         "suggestion": "Use 'your-deployment' placeholder",
     },
     {
         "name": "Kibana endpoint",
-        "pattern": r"mcccd-\w+\.kb\.\w+\.aws\.found\.io",
+        "pattern": r"[a-z]{3,8}-\w+\.kb\.\w+\.aws\.found\.io",
         "suggestion": "Use 'your-deployment.kb.us-west-2.aws.found.io'",
     },
     {
         "name": "ES endpoint",
-        "pattern": r"mcccd-\w+\.es\.\w+\.aws\.found\.io",
+        "pattern": r"[a-z]{3,8}-\w+\.es\.\w+\.aws\.found\.io",
         "suggestion": "Use 'your-deployment.es.us-west-2.aws.found.io'",
     },
 

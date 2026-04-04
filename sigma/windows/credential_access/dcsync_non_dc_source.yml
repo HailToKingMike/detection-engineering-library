@@ -5,7 +5,7 @@ description: Detects DCSync attack via directory replication requests from non-D
 references:
   - https://attack.mitre.org/techniques/T1003/006/
   - DH-007
-author: Michael Stewart
+author: Imperium Defense
 date: 2026-03-26
 logsource:
   product: windows

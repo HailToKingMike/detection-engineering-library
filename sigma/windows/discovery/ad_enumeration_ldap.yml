@@ -5,7 +5,7 @@ description: Detects BloodHound-style AD enumeration via net commands and PowerV
 references:
   - https://attack.mitre.org/techniques/T1087/
   - DH-003
-author: Michael Stewart
+author: Imperium Defense
 date: 2026-03-26
 logsource:
   category: process_creation
