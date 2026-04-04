@@ -1,14 +1,14 @@
 # Detection Engineering Library
 
-A production-grade detection engineering repository implementing hypothesis-driven detection
-methodology across Elastic SIEM and CrowdStrike Falcon. Built and maintained by a security
-operations engineer at a large multi-campus educational institution (150,000+ users, 28,000+
-managed endpoints).
+A production-grade detection engineering repository implementing hypothesis-driven
+detection methodology across Elastic SIEM and CrowdStrike Falcon. Built by a
+security operations engineer at a large multi-campus educational institution
+serving 150,000+ users across multiple campuses.
 
-Every rule in this library was developed through a structured hypothesis lifecycle, not copied
-from vendor defaults or blog posts. Each detection maps to a documented adversary behavior,
-has lab validation evidence, and is compiled simultaneously to both SIEM and EDR platforms
-via a CI/CD pipeline.
+Every rule in this library was developed through a structured hypothesis lifecycle,
+not copied from vendor defaults or blog posts. Each detection maps to a documented
+adversary behavior, has lab validation evidence, and is compiled simultaneously to
+both SIEM and EDR platforms via a CI/CD pipeline.
 
 ---
 
@@ -16,15 +16,13 @@ via a CI/CD pipeline.
 
 Most detection repositories contain rules. This one contains a **detection program**.
 
-The difference:
-
 - Rules are written from testable **behavioral hypotheses** tied to specific adversary profiles
 - Every hypothesis references the threat intelligence source that motivated it
 - CI/CD validates syntax, compiles to multiple backends, and checks hypothesis references on every commit
 - Lab validation (true positive, false positive, variant testing) is required before any rule reaches production
-- Coverage is tracked with a quality score (0-3) against ATT&CK techniques, not just a list of rules
+- Coverage is tracked with a quality score (0–3) against ATT&CK techniques, not just a list of rules
 - Detection families bundle rules, correlation logic, investigation dashboards, and analyst triage guides
-- A GenAI-powered triage service provides automated alert classification with environment-tuned context
+- An AI-powered triage service provides automated alert classification with environment-tuned context
 
 ---
 
@@ -34,74 +32,63 @@ This library is one half of a two-repository detection platform. The split follo
 principle: **the playbook is publishable; the play calls are not.**
 
 ```
-detection-engineering-library (this repo, public)
+detection-engineering-library (this repo — public)
   Sigma rules, hypotheses, coverage matrix, adversary profiles,
   detection families, CI/CD workflows, sanitized test evidence,
   ART loop methodology templates.
 
-detection-platform (private, internal)
-  AlertTriageService source code, Elastic knowledge Base entries with
+detection-platform (private — Imperium Defense)
+  AlertTriageService source code, Elastic Knowledge Base entries with
   organizational context, lab infrastructure configs,
-  .env files, production promotion scripts, internal deployment docs.
+  environment files, production promotion scripts, deployment docs.
 ```
-
-The public repo documents the detection program architecture and methodology. The private
-repo contains the implementation that connects to real infrastructure. Anyone can fork
-this library and build their own detection platform on top of it.
 
 ### Detection Validation Pipeline
 
-Every detection rule goes through a structured validation loop before reaching production:
-
 ```
 Hypothesis (DH-xxx)
-  |
-  v
+  │
+  ▼
 Atomic Red Team test in isolated lab
-  |
-  v
+  │
+  ▼
 Telemetry confirmed in dev SIEM cluster
-  |
-  v
+  │
+  ▼
 Sigma rule fires as detection rule
-  |
-  v
+  │
+  ▼
 AlertTriageService generates triage decision
-  |
-  v
+  │
+  ▼
 Three-check validation (TP, FP, rebuild+retest)
-  |
-  v
+  │
+  ▼
 Evidence documented in tests/T[technique]/
-  |
-  v
-PR opened -> CI validates -> human review -> merge
-  |
-  v
+  │
+  ▼
+PR opened → CI validates → human review → merge
+  │
+  ▼
 Coverage matrix auto-updates via CI bot
-  |
-  v
+  │
+  ▼
 Rule promoted to production SIEM + EDR
 ```
 
-### AlertTriageService
+### AlertTriageService — Tier Model
 
-The platform includes a GenAI-powered alert triage service that classifies security alerts
-with environment-tuned context. The service reads alerts from the SIEM, enriches them with
-organizational context (user population, known false positive patterns, campus architecture),
-and produces structured triage decisions with escalation recommendations.
-
-Triage decisions follow a four-tier scoring model:
+Automated alert triage with AI-powered scoring:
 
 | Score | Tier | Action |
 |-------|------|--------|
-| 0-30 | Auto-close | Insufficient signal, log only |
-| 31-60 | T1 Analyst | Triage within 4 hours |
-| 61-85 | T2 Escalate | Senior analyst, 1 hour SLA |
-| 86-100 | Auto-contain | Immediate isolation and notification |
+| 0–30 | Auto-Close | Insufficient signal, log only |
+| 31–60 | T1 Analyst | Triage within 4 hours |
+| 61–85 | T2 Escalate | Senior analyst, 1-hour SLA |
+| 86–100 | **Aegis Prime** | **Immediate isolation and notification** |
 
-The triage service source code lives in the private `detection-platform` repo. This library
-documents the methodology and scoring model as a reference implementation.
+The triage service source code lives in the private `detection-platform` repo.
+This library documents the methodology and scoring model as a reference implementation.
 
 ---
 
@@ -114,84 +101,56 @@ detection-engineering-library/
 │   │   ├── sigma-validation.yml      # Syntax + multi-backend compilation CI
 │   │   └── coverage-update.yml       # Auto-regenerate coverage matrix on merge
 │   └── ISSUE_TEMPLATE/
-│       ├── new_hypothesis.md         # Structured template for hypothesis proposals
-│       └── rule_submission.md        # PR checklist for rule submissions
+│       ├── new_hypothesis.md
+│       └── rule_submission.md
 │
-├── sigma/                            # Source rules — single source of truth
+├── sigma/
 │   ├── windows/
-│   │   ├── credential_access/        # LSASS, Kerberoasting, DCSync, spray, MFA
+│   │   ├── credential_access/
 │   │   ├── execution/
-│   │   ├── lateral_movement/         # Pass-the-hash, SMB
-│   │   ├── persistence/              # Scheduled tasks, registry run keys
-│   │   ├── defense_evasion/          # LOLBins
-│   │   ├── discovery/                # AD enumeration, BloodHound
-│   │   └── impact/                   # Shadow copy deletion
+│   │   ├── lateral_movement/
+│   │   ├── persistence/
+│   │   ├── defense_evasion/
+│   │   ├── discovery/
+│   │   └── impact/
 │   ├── linux/
-│   └── network/                      # DNS exfiltration, C2 beaconing
+│   └── network/
 │
 ├── compiled/                         # Auto-generated by CI — never edit directly
-│   ├── elastic/                      # pySigma output for Kibana NDJSON import
-│   └── crowdstrike/                  # pySigma output for CrowdStrike IOA syntax
+│   ├── elastic/
+│   └── crowdstrike/
 │
-├── hypotheses/                       # Structured YAML for each detection hypothesis
-│   └── DH-001.yml through DH-019.yml
-│
+├── hypotheses/                       # DH-001 through DH-019
 ├── tests/                            # Lab validation evidence per technique
-│   └── T[technique]/
-│       ├── true_positive.md
-│       ├── false_positive.md
-│       └── variants_tested.md
-│
 ├── detection-families/               # Bundled investigation packs per attack family
-│   ├── identity_abuse/               # Gold standard template (8-component bundle)
-│   ├── credential_access/
-│   ├── lateral_movement/
-│   ├── persistence/
-│   ├── execution/
-│   └── exfiltration/
-│
 ├── coverage-matrix/
-│   ├── current_coverage.json         # Quality-scored ATT&CK coverage state
-│   └── navigator_layer.json          # ATT&CK Navigator export
-│
-├── adversary-profiles/               # Threat actor TTPs mapped to hypotheses
-│   ├── ransomware_groups.json
-│   ├── apt29_education.json
-│   ├── apt28_education.json
-│   └── opportunistic_actors.json
-│
-├── intel/                            # Behavioral fingerprint library
-│   ├── process/                      # Process execution artifacts per tool/technique
-│   ├── network/                      # C2 and exfiltration behavioral patterns
-│   ├── credential/                   # Authentication anomaly patterns
-│   ├── parent_child/                 # Parent-child process relationship patterns
-│   └── evasion/                      # Techniques that evaded detection (gap tracking)
-│
+│   ├── current_coverage.json
+│   └── navigator_layer.json
+├── adversary-profiles/
+├── intel/
 └── scripts/
-    └── update_coverage.py            # Coverage matrix regeneration script
+    ├── dlp_gate.py                   # DLP validation (run on every PR)
+    └── update_coverage.py            # Coverage matrix regeneration
 ```
 
 ---
 
 ## Detection Quality Scoring
 
-Every technique in the coverage matrix carries a quality score:
-
 | Score | Meaning |
 |-------|---------|
 | 0 | No rule exists or telemetry unavailable |
-| 1 | Rule exists, experimental status, lab validation pending |
+| 1 | Rule exists, experimental, lab validation pending |
 | 2 | Rule validated in lab, single variant or one platform confirmed |
-| 3 | Rule validated, multiple variants confirmed, FP check passed, both platforms |
+| 3 | Rule validated, multiple variants, FP check passed, both platforms |
 
-Only score-3 rules are promoted to production. Rules at score 1-2 are in active validation.
+Only score-3 rules are promoted to production.
 
 ---
 
-## Hypothesis Backlog (19 Active Hypotheses)
+## Hypothesis Backlog (19 Active)
 
 Prioritized by threat actor frequency targeting the education sector.
-Each hypothesis is a testable behavioral statement, not an ATT&CK technique number.
 
 | ID | Behavior | Adversary | ATT&CK | Status |
 |----|----------|-----------|--------|--------|
@@ -200,17 +159,17 @@ Each hypothesis is a testable behavioral statement, not an ATT&CK technique numb
 | DH-003 | BloodHound/LDAP AD enumeration | All profiles | T1087, T1069 | Backlog |
 | DH-004 | Pass-the-hash lateral movement | Ransomware, APT28 | T1550.002 | Backlog |
 | DH-005 | DNS-based C2 beaconing | APT29, APT28 | T1071.004 | Backlog |
-| DH-006 | Living-off-the-land execution | APT29, advanced actors | T1218, T1059 | Backlog |
+| DH-006 | Living-off-the-land execution | APT29 | T1218, T1059 | Backlog |
 | DH-007 | DCSync domain replication abuse | Ransomware | T1003.006 | Backlog |
-| DH-008 | Scheduled task persistence | Ransomware, opportunistic | T1053.005 | Backlog |
+| DH-008 | Scheduled task persistence | Ransomware | T1053.005 | Backlog |
 | DH-009 | Registry run key persistence | Multiple | T1547.001 | Backlog |
-| DH-010 | VPN credential stuffing initial access | APT28, opportunistic | T1078, T1110 | Backlog |
+| DH-010 | VPN credential stuffing | APT28, opportunistic | T1078, T1110 | Backlog |
 | DH-011 | Large file staging pre-exfil | Ransomware | T1074, T1005 | Backlog |
-| DH-012 | Shadow copy deletion pre-ransomware | Ransomware | T1490 | Backlog |
+| DH-012 | Shadow copy deletion | Ransomware | T1490 | Backlog |
 | DH-013 | MFA fatigue and push bombing | APT29, APT28 | T1621 | Backlog |
-| DH-014 | OAuth consent grant abuse | APT29, cloud actors | T1528 | Backlog |
+| DH-014 | OAuth consent grant abuse | APT29 | T1528 | Backlog |
 | DH-015 | Azure AD token theft and replay | APT29 | T1528, T1550.001 | Backlog |
-| DH-016 | Impossible travel anomalous login | All identity actors | T1078 | Backlog |
+| DH-016 | Impossible travel login | All identity actors | T1078 | Backlog |
 | DH-017 | Service principal credential abuse | Cloud actors | T1098.001 | Backlog |
 | DH-018 | AWS IAM privilege escalation | Cloud actors | T1078.004 | Backlog |
 | DH-019 | Cloudflare Gateway DNS exfil bypass | APT29, C2 operators | T1071.004 | Backlog |
@@ -219,8 +178,7 @@ Each hypothesis is a testable behavioral statement, not an ATT&CK technique numb
 
 ## Detection Families
 
-The detection family architecture bundles everything needed to investigate an attack
-category into a single package. Each family contains 8 components:
+Each family bundles 8 components:
 
 1. Sigma rules (compiled to Elastic and CrowdStrike)
 2. EQL correlation rule for cross-source behavioral chaining
@@ -229,12 +187,11 @@ category into a single package. Each family contains 8 components:
 5. Analyst triage decision guide
 6. Known false positive baseline
 7. Remediation runbook
-8. ATT&CK coverage layer for the family
+8. ATT&CK coverage layer
 
-The **Identity Abuse** family (`detection-families/identity_abuse/`) is built as
-the gold standard template. It includes a working EQL correlation rule that chains
-Duo MFA failures with CrowdStrike alerts on the same user identity within a 10-minute
-window. Remaining families are in active development.
+The **Identity Abuse** family (`detection-families/identity_abuse/`) is the
+gold standard template, including a working EQL correlation rule chaining
+Duo MFA failures with CrowdStrike alerts on the same identity within 10 minutes.
 
 ---
 
@@ -242,105 +199,95 @@ window. Remaining families are in active development.
 
 Every pull request to `sigma/` triggers:
 
-1. **Sigma syntax validation** with required field checks
-2. **Elastic compilation** via pySigma to Kibana NDJSON
-3. **CrowdStrike compilation** via pySigma to IOA syntax
-4. **Hypothesis reference check** ensuring every rule links to a DH-xxx hypothesis
-5. **ATT&CK coverage diff** showing which techniques changed in the PR
+1. Sigma syntax validation with required field checks
+2. Elastic compilation via pySigma to Kibana NDJSON
+3. CrowdStrike compilation via pySigma to IOA syntax
+4. Hypothesis reference check (every rule must link to a DH-xxx ID)
+5. ATT&CK coverage diff showing which techniques changed
+6. DLP gate scan blocking internal identifiers before merge
 
 On merge to main, a coverage bot regenerates `coverage-matrix/current_coverage.json`
-and commits the updated matrix automatically.
+automatically.
 
 ---
 
 ## Rule Submission Workflow
 
-1. Identify technique gap from hypothesis backlog or threat intel (CISA, REN-ISAC, MS-ISAC)
+1. Identify technique gap from hypothesis backlog or threat intelligence
 2. Run Atomic Red Team test in detection lab, record timestamps
 3. Analyze telemetry, identify behavioral fingerprint
 4. Write Sigma rule referencing parent hypothesis ID
-5. Compile with `sigma convert -t elasticsearch -f kibana_ndjson rule.yml`
-6. Deploy to lab environment, run three-check validation (TP, FP, rebuild and retest)
+5. Compile: `sigma convert -t elasticsearch -f kibana_ndjson rule.yml`
+6. Deploy to lab, run three-check validation (TP, FP, rebuild and retest)
 7. Run AlertTriageService against test alerts, validate triage decision output
 8. Save evidence to `tests/<technique_id>/`
-9. Open PR with evidence files attached. CI must pass before human review
-10. Merge to main, coverage matrix auto-updates
-11. Promote validated rule to production SIEM and EDR via promotion SOP
+9. Open PR with evidence attached — CI must pass before human review
+10. Merge → coverage matrix auto-updates
+11. Promote validated rule to production SIEM and EDR
 
 ---
 
 ## Detection Stack
 
-- **SIEM**: Elastic Cloud 9.3.2 (Kibana detection rules, EQL correlation, ML anomaly jobs)
-- **EDR**: CrowdStrike Falcon (IOA rules, custom indicators, Flight Control multi-tenant)
-- **Telemetry**: Sysmon, Windows Security Events, Duo MFA, Cloudflare Gateway DNS, AWS CloudTrail, Entra ID
-- **Validation Lab**: AWS isolated VPC (DC, 2x Win11 workstations, Kali attacker), dedicated dev SIEM cluster, development CrowdStrike CID
-- **Adversary Emulation**: Atomic Red Team (Invoke-AtomicRedTeam), CALDERA
-- **Triage Automation**: AlertTriageService with GenAI-powered classification (private repo)
-- **Rule Format**: Sigma (pySigma for multi-backend compilation to Elastic and CrowdStrike)
-- **CI/CD**: GitHub Actions (syntax validation, multi-backend compilation, coverage matrix auto-update)
+- **SIEM:** Elastic Security (Kibana detection rules, EQL correlation, ML anomaly jobs)
+- **EDR:** CrowdStrike Falcon (IOA rules, custom indicators, Flight Control multi-tenant)
+- **Telemetry:** Sysmon, Windows Security Events, Duo MFA, Cloudflare Gateway DNS, AWS CloudTrail, Entra ID
+- **Validation Lab:** AWS isolated VPC (DC, 2× Win11 workstations, Kali attacker), dedicated dev SIEM cluster, development CrowdStrike CID
+- **Adversary Emulation:** Atomic Red Team, CALDERA
+- **Triage Automation:** AlertTriageService with Aegis Prime AI-powered classification (private repo)
+- **Rule Format:** Sigma (pySigma for multi-backend compilation)
+- **CI/CD:** GitHub Actions (syntax validation, multi-backend compilation, coverage auto-update)
 
 ---
 
 ## Validation Lab Architecture
 
-The detection lab runs in an isolated AWS VPC with no connectivity to production networks.
-It mirrors the production telemetry configuration to ensure detection fidelity:
+Isolated AWS VPC with no connectivity to production networks, mirroring
+production telemetry configuration for detection fidelity.
 
-- **Domain Controller** running Active Directory with test accounts and service principals
-- **Two Windows 11 workstations** with Sysmon, Elastic Agent, and CrowdStrike Falcon sensor
-- **Kali Linux attacker** running Atomic Red Team, Impacket, and Mimikatz
-- **Dev SIEM cluster** (Elastic Cloud, separate deployment from production)
-- **Dev CrowdStrike CID** (detect-only policy, no prevention blocking test execution)
+- **Domain Controller** — Active Directory with test accounts and service principals
+- **Two Windows 11 workstations** — Sysmon, Elastic Agent, CrowdStrike Falcon sensor
+- **Kali Linux attacker** — Atomic Red Team, Impacket, Mimikatz
+- **Dev SIEM cluster** — Elastic Security, separate from production
+- **Dev CrowdStrike CID** — detect-only policy, no prevention blocking test execution
 
-Detection fidelity depends on configuration parity, not environment scale. The lab matches
-the production Sysmon configuration, Elastic Agent version, and CrowdStrike sensor policy.
-A rule that fires in the lab fires identically in production.
+Detection fidelity depends on configuration parity, not environment scale.
 
 ---
 
 ## ART Testing Loop Methodology
 
-Each detection hypothesis progresses through a structured Atomic Red Team validation loop.
-The loop produces three outputs from a single session: a validated detection rule, a triage
-decision log, and updated coverage evidence.
+Each hypothesis progresses through a structured Atomic Red Team validation loop
+producing three outputs from a single session: a validated detection rule,
+a triage decision log, and updated coverage evidence.
 
 **Loop steps:**
-
 1. Fire the ART atomic test on a lab workstation
 2. Confirm telemetry lands in the dev SIEM cluster
 3. Verify the Sigma rule fires as a Kibana detection rule
 4. Run the AlertTriageService against the generated alert
-5. Complete three-check validation:
-   - True positive: rule fires on adversary technique
-   - False positive: rule does NOT fire during normal admin activity
-   - Rebuild and retest: restore VM to clean baseline, run again for consistency
+5. Complete three-check validation (TP, FP, rebuild and retest)
 6. Update evidence files in `tests/T[technique]/`
 7. Update hypothesis YAML `coverage_result` fields
-8. Commit changes, CI auto-updates coverage matrix
+8. Commit — CI auto-updates coverage matrix
 
 DH-001 (T1003.001 LSASS credential dumping) is the designated proof-of-concept loop.
-Once complete, remaining hypotheses follow the same pattern at a one-per-day cadence.
 
 ---
 
 ## About This Repository
 
-This library represents the detection engineering program I built at a large multi-campus
-educational institution while serving as the lead engineer on a 12-phase Security Program
-Modernization initiative. It is a working production system, not a demo.
-
-The hypothesis backlog is seeded from real threat intelligence: CISA advisories filtered
-for the education sector, REN-ISAC higher education threat briefings, and adversary profiles
-built from observed TTPs against comparable institutions.
+This library represents a production detection engineering program built through
+real operational work at scale. The hypothesis backlog is seeded from CISA
+advisories filtered for the education sector, REN-ISAC higher education threat
+briefings, and adversary profiles built from observed TTPs against comparable
+institutions.
 
 Rules are validated in an isolated AWS detection lab before production deployment.
 Coverage scores reflect real lab results, not theoretical capability.
 
 ---
 
-## Author
-
-**Michael Stewart** - Security Engineer, Detection Engineering
-
-[LinkedIn](https://linkedin.com/in/mfstewart) | [GitHub](https://github.com/HailToKingMike)
+**Imperium Defense LLC**
+[imperiumdefense.com](https://imperiumdefense.com) ◆
+[GitHub](https://github.com/HailToKingMike)
